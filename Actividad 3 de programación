@@ -1,0 +1,49 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Definir el intervalo y parámetros
+x = np.linspace(-3, 3, 1000)  # rango de x
+N = 15  # número de términos para la serie de Fourier
+
+# Coeficiente de la parte constante (a0/2)
+a0_over_2 = 1.5
+
+# Calcular la suma de la serie de Fourier
+f_approx = np.full_like(x, a0_over_2)  # inicilizamos con la parte constante
+
+# Lista para coeficientes y n
+coeffs = []
+n_vals = []
+
+for n in range(1, N+1):
+    if n % 2 == 1:  # n impar
+        a_n = 12 / (n * np.pi)**2
+        b_n = -6 / (n * np.pi) * (-1)**n
+
+        # Añadir los términos
+        f_approx += a_n * np.cos(n * np.pi / 3 * x) + b_n * np.sin(n * np.pi / 3 * x)
+
+        # Guardar coeficientes para el espectro
+        coeffs.append(abs(a_n))
+        n_vals.append(n)
+        coeffs.append(abs(b_n))
+        n_vals.append(n)
+
+# Gráfica de la serie de Fourier
+plt.figure(figsize=(12, 6))
+plt.plot(x, f_approx, label=f'Aproximación con {N} términos')
+plt.title('Aproximación por Serie de Fourier de la función')
+plt.xlabel('x')
+plt.ylabel('F(x)')
+plt.grid(True)
+plt.legend()
+plt.show()
+
+# Gráfica del espectro (coeficientes)
+plt.figure(figsize=(12, 6))
+plt.bar(n_vals, coeffs)
+plt.xlabel('n (orden de las componentes)')
+plt.ylabel('|Coeficiente|')
+plt.title('Espectro de Fourier de la función')
+plt.grid(True)
+plt.show()
